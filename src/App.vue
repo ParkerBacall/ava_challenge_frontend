@@ -136,11 +136,27 @@ export default {
       })
       .then(response => response.json())
       .then(mutation => {
-        this.selectedConversation.lastMutation = mutation[0]
-        this.selectedConversation.text = `${this.selectedConversation.text} ${ mutation[0].text}`
+
+        fetch('http://localhost:9001/conversations',{
+        method: 'PATCH',
+        headers:{
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          'id': this.selectedConversation.id,
+          'text': `${this.selectedConversation.text} ${mutation[0].text}`,
+          'lastMutation':  mutation[0]
         })
-    }
-    },
+    
+    })
+     .then(response => response.json())
+     .then(response => {
+     this.selectedConversation.text = response.text
+     this.selectedConversation.lastMutation = response.lastMutation
+ })
+})
+}
+},
     mounted(){
         fetch('http://localhost:9001/conversations')
         .then(response => response.json())
