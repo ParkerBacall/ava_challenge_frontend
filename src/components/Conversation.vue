@@ -1,7 +1,8 @@
 <template>
   <div>
-     <h1>{{conversation.text}}</h1>
-     <p>{{conversation.lastMutation}}</p>
+     <h2>{{conversation.text}}</h2>
+     <button v-on:click="$emit('del-conversation', conversation.id)">Delete</button>
+     <button>Star</button>
   </div>
 </template>
 
@@ -12,6 +13,6 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="sass" scoped>
+    
 </style>
