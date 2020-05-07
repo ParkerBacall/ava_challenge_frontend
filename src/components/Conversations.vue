@@ -3,7 +3,11 @@
     <h1>Select a Conversation</h1>
     <div id="card-container">
         <div id='conversation-card' :key="conversation.id" v-for="conversation in conversations">
-            <Conversation :conversation="conversation" v-on:del-conversation="$emit('del-conversation', conversation.id)"/>
+            <Conversation 
+            :conversation="conversation" 
+            v-on:del-conversation="$emit('del-conversation', conversation.id)"
+            v-on:toggle-show="$emit('toggle-show', conversation)"
+            />
     </div>
     </div>
 </div>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-on:click="$emit('toggle-show', conversation)">
      <h2>{{conversation.text}}</h2>
      <button v-on:click="$emit('del-conversation', conversation.id)">Delete</button>
      <button>Star</button>
