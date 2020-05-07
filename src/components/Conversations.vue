@@ -2,10 +2,13 @@
 <div>
     <h1>Select a Conversation</h1>
     <div id="card-container">
-        <div id='conversation-card' :key="conversation.id" v-for="conversation in conversations">
+        <div :key="conversation.id" v-for="conversation in conversations">
             <Conversation 
             :conversation="conversation" 
+            :starredConversations="starredConversations"
             v-on:del-conversation="$emit('del-conversation', conversation.id)"
+            v-on:star-conversation="$emit('star-conversation', conversation)"
+            v-on:unstar-conversation="$emit('unstar-conversation', conversation)"
             v-on:toggle-show="$emit('toggle-show', conversation)"
             />
     </div>
@@ -20,7 +23,7 @@ export default {
     components: {
         Conversation
     },
-    props: ["conversations"]
+    props: ["conversations","starredConversations"]
         
 }
 </script>
@@ -31,21 +34,5 @@ export default {
         justify-content: space-evenly;
         flex-wrap: wrap;
     }
-    #conversation-card{
-        width: 250px;
-        height: 100px;
-        padding:10px;
-        border-radius:10px;
-        margin:10px;
-        box-shadow: 0px 0px 4px #666;
-    }
-    #conversation-card:hover{
-        background-color: #999;
-        width: 250px;
-        height: 100px;
-        padding:10px;
-        border-radius:10px;
-        margin:10px;
-        box-shadow: 0px 0px 4px #666;
-    }
+   
 </style>
