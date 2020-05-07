@@ -135,7 +135,10 @@ export default {
         })
       })
       .then(response => response.json())
-      .then(mutation => console.log(mutation[0]))
+      .then(mutation => {
+        this.selectedConversation.lastMutation = mutation[0]
+        this.selectedConversation.text = `${this.selectedConversation.text} ${ mutation[0].text}`
+        })
     }
     },
     mounted(){

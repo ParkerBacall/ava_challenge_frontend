@@ -1,7 +1,8 @@
 <template>
   <div>
       <button v-on:click="$emit('toggle-show', conversation)">back</button>
-      {{conversation}}
+      <h3>{{conversation.text}}</h3>
+      <p>{{conversation.lastMutation}}</p>
   </div>
 </template>
 
