@@ -9,6 +9,11 @@
      v-on:toggle-show="toggleShow"
     />
 
+    <AddConversation
+    v-if="!this.show && !this.showStars"
+    v-on:add-convo="postConvo"
+    />
+
     <Conversations v-if="!this.show && !this.showStars" :conversations="conversations" 
     v-on:del-conversation="deleteConvo"
     v-on:star-conversation="starConvo"
@@ -16,6 +21,12 @@
     :starredConversations="starredConversations"
     v-on:toggle-show="toggleShow"
     />
+
+    <AddMutations
+      v-if="this.show"
+      v-on:add-mutation="postMutation"
+    />
+    
 
     <StarredConversationsList 
     v-if="this.showStars && !this.show"
@@ -28,6 +39,8 @@
 </template>
 
 <script>
+import AddConversation from "./components/AddConversation"
+import AddMutations from "./components/AddMutation"
 import Conversations from './components/Conversations'
 import ShowConversation from './components/ShowConversation'
 import StarredConversationsList from './components/StarredConversationsList'
@@ -36,7 +49,9 @@ export default {
   components: {
     Conversations,
     ShowConversation,
-    StarredConversationsList
+    StarredConversationsList,
+    AddConversation,
+    AddMutations
   },
    data(){
         return {
@@ -72,7 +87,55 @@ export default {
     },
     unstarConvo(conversation){
        event.stopPropagation();
-      this.starredConversations = this.conversations.filter(convo => convo != conversation)
+      this.starredConversations = this.starredConversations.filter(convo => convo != conversation)
+    },
+    postConvo(newConvo){
+      fetch('http://localhost:9001/mutations',{
+        method: 'POST',
+        headers:{
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "author": newConvo.author,
+          "conversationId": '_' + Math.random().toString(36).substr(2, 9),
+          data:{
+            "index": 0,
+            "length": newConvo.text.length,
+            "type": "insert",
+            "text": newConvo.text,
+          },
+          origin:{
+            "alice": newConvo.author === 'Alice' ? 1 : 0,
+            "bob": newConvo.author === 'Bob' ? 1 : 0
+          }
+        })
+      })
+      .then(response => response.json())
+      .then(convo => this.conversations = [...this.conversations, convo[0]])
+    },
+    postMutation(newMutation){
+      fetch('http://localhost:9001/mutations',{
+        method: 'POST',
+        headers:{
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          "author": newMutation.author,
+          "conversationId": this.selectedConversation.id,
+           "data": {
+            "index": this.selectedConversation.text.length,
+            "length": newMutation.text.length,
+            "type": "insert",
+            "text": newMutation.text,
+           },
+           origin: {
+          "alice": newMutation.author === 'Alice' ? 1 : 0,
+          "bob": newMutation.author === 'Bob' ? 1 : 0
+           }
+        })
+      })
+      .then(response => response.json())
+      .then(mutation => console.log(mutation[0]))
     }
     },
     mounted(){
